@@ -6,8 +6,18 @@ using UnityStandardAssets.CrossPlatformInput;
 public class GameManager : MonoBehaviour {
 
     public bool recording = true; // Indicates whether or not the game is being recording
-	
-	void Update () {
+
+    private bool paused = false;
+    private float initialFixedDelta;
+
+    private void Start( )
+    {
+        PlayerPrefsManager.UnlockLevel(2);
+        print(PlayerPrefsManager.IsLevelUnlocked(2));
+        initialFixedDelta = Time.fixedDeltaTime;  // This is set in Project Settings -> Time -> Fixed Timestep
+    }
+
+    void Update( ) {
         if (CrossPlatformInputManager.GetButton("Fire1"))  // Fire1 determined in the input manager, default key is left ctrl key
         {
             recording = false;
@@ -16,15 +26,28 @@ public class GameManager : MonoBehaviour {
         {
             recording = true;
         }
-	}
+        if (Input.GetKeyDown(KeyCode.P) && paused)
+        {
+            UnPause( );
+        } else if (Input.GetKeyDown(KeyCode.P) && !paused)
+        {
+            PauseGame( );
+        }
 
-    public void Recording( )
-    {
-        recording = true;
+
     }
 
-    public void Playback( )
+    void PauseGame( )
     {
-        recording = false;
+        Time.timeScale = 0;
+        Time.fixedDeltaTime = 0;
+        paused = true;
+    }
+
+    void UnPause( )
+    {
+        paused = false;
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = initialFixedDelta;
     }
 }

@@ -31,7 +31,6 @@ public class ReplaySystem : MonoBehaviour {
         rigidBody.isKinematic = false;  // Allows input to control the object during Playback
         int frame = Time.frameCount % bufferFrames;  // Sets the circular buffer
         float time = Time.time;
-        print("Writing frame " + frame);
 
         keyFrames[frame] = new MyKeyFrame(time, transform.position, transform.rotation);
     }
@@ -40,7 +39,6 @@ public class ReplaySystem : MonoBehaviour {
     {
         rigidBody.isKinematic = true;  // Prevents input from controlling the object during Playback
         int frame = Time.frameCount % bufferFrames;
-        print("Reading frame " + frame);
         transform.position = keyFrames[frame].position;
         transform.rotation = keyFrames[frame].rotation;
     }
